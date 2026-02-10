@@ -123,3 +123,13 @@ li {
 }
 
 .btn-approve:hover { background-color: #1b5e20; }
+
+.finance-row { display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px; border-top: 1px solid #eee; padding-top: 5px; }
+.green { color: #2e7d32; }
+.red { color: #c62828; }
+.expense-box { margin-top: 10px; background: #f9f9f9; padding: 10px; border-radius: 4px; }
+.expense-box input { font-size: 11px; padding: 5px; margin-bottom: 5px; width: 90%; }
+.btn-small { background: #1a237e; font-size: 10px; padding: 5px; width: 100%; border: none; color: white; cursor: pointer; }
+.progress-bar { width: 100%; background: #eee; height: 10px; border-radius: 5px; margin-top: 5px; }
+.progress { background: #1a237e; height: 100%; border-radius: 5px; transition: width 0.3s; }
+.add-box { margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }

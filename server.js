@@ -64,3 +64,31 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`VERYX Server running on Port ${PORT}`);
     console.log(`[SYSTEM] Event Sourcing Mode: ACTIVE`);
 });
+
+// 4. Log Expense Command (Section 4.3)
+app.post('/api/command/log-expense', (req, res) => {
+    const { portfolioId, amount, description, user } = req.body;
+    
+    // Append Expense Event
+    eventStore.append(portfolioId, 'EXPENSE_LOGGED', { 
+        amount: parseInt(amount), 
+        description 
+    }, user);
+
+    res.json({ success: true, message: "Expense Logged" });
+});
+
+// 5. Add Resource Command (Section 4.4)
+app.post('/api/command/add-resource', (req, res) => {
+    const { name, skill, user } = req.body;
+    const streamId = uuidv4();
+    eventStore.append(streamId, 'RESOURCE_ADDED', { name, skill }, user);
+    res.json({ success: true, id: streamId });
+});
+
+// 6. Log Timesheet Command (Section 4.4)
+app.post('/api/command/log-timesheet', (req, res) => {
+    const { resourceId, hours, user } = req.body;
+    eventStore.append(resourceId, 'TIMESHEET_LOGGED', { hours }, user);
+    res.json({ success: true });
+});

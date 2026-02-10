@@ -8,12 +8,18 @@ function App() {
   const [portfolios, setPortfolios] = useState([]);
   const [events, setEvents] = useState([]);
   const [newProject, setNewProject] = useState({ name: '', budget: '', score: '' });
+  const [workforce, setWorkforce] = useState([]);
+  const [newStaff, setNewStaff] = useState({ name: '', skill: '' });
+  const [expense, setExpense] = useState({ id: '', amount: '', desc: '' });
 
   const fetchState = async () => {
     try {
       const res = await fetch(`${API_URL}/api/query/state`);
       const data = await res.json();
-      if (data && data.portfolios) setPortfolios(data.portfolios);
+      if (data) {
+        if (data.portfolios) setPortfolios(data.portfolios);
+        if (data.workforce) setWorkforce(data.workforce);
+      }
     } catch (err) { console.error(err); }
   };
 
@@ -54,6 +60,25 @@ function App() {
     });
   };
 
+  const handleAddStaff = async () => {
+    await fetch(`${API_URL}/api/command/add-resource`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...newStaff, user: 'hr@veryx.com' })
+    });
+    setNewStaff({ name: '', skill: '' });
+};
+
+const handleTimesheet = async (id) => {
+    const hours = prompt("Enter hours worked:");
+    if (!hours) return;
+    await fetch(`${API_URL}/api/command/log-timesheet`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resourceId: id, hours: parseInt(hours), user: 'staff@veryx.com' })
+    });
+};
+
   return (
     <div className="App">
       <header className="header">
@@ -82,6 +107,10 @@ function App() {
                 {p.status === 'PENDING_APPROVAL' && (
                   <button className="btn-approve" onClick={() => handleApprove(p.id)}>Approve Stage-Gate</button>
                 )}
+                <div>
+                  <h3>Portfolio Balance: {p.balance}</h3>
+                  <h3 className={p.cpi > 1 ? 'green' : 'red'}>CPI: {p.cpi}</h3>
+                </div>
               </li>
             ))}
           </ul>
@@ -98,6 +127,25 @@ function App() {
               </div>
             ))}
           </div>
+        </div>
+
+        <div className="card">
+          <h2>Workforce (Utilization)</h2>
+          <div className="add-box">
+            <input placeholder="Staff Name" value={newStaff.name} onChange={(e)=>setNewStaff({...newStaff, name:e.target.value})} />
+            <button onClick={handleAddStaff}>Add Staff</button>
+          </div>
+          <ul>
+            {workforce.map(w => (
+              <li key={w.id} onClick={() => handleTimesheet(w.id)} style={{cursor:'pointer'}}>
+                <strong>{w.name}</strong> ({w.skill})
+                <div className="progress-bar">
+                   <div className="progress" style={{width: `${w.utilization}%`}}></div>
+                </div>
+                <small>{w.utilization}% Utilized</small>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
