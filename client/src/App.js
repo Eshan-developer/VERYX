@@ -6,7 +6,7 @@ import './App.css';
 
 // 🔴 PASTE YOUR PORT 5000 LINK HERE (Do not add a trailing slash / at the end)
 // Example: const API_URL = "https://psychic-waddle-5000.github.dev";
-const API_URL = "https://psychic-waddle-q7jw959jqxx7cxw5v-5000.app.github.dev//"; 
+const API_URL = "https://psychic-waddle-q7jw959jqxx7cxw5v-5000.app.github.dev"; 
 
 function App() {
   const [portfolios, setPortfolios] = useState([]);

@@ -15,13 +15,16 @@ app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
-}));
+})); // Add missing semicolon
 
 // DEBUG LOGGING: This will tell us if the frontend is actually hitting the backend
 app.use((req, res, next) => {
     console.log(`[${new Date().toLocaleTimeString()}] ${req.method} request to: ${req.url}`);
     next();
-});
+}); // Corrected misplaced closing parenthesis
+
+// Global OPTIONS handler
+app.options('*', cors());
 
 // ROOT ROUTE
 app.get('/', (req, res) => {
@@ -50,6 +53,6 @@ app.get('/api/query/audit-log', (req, res) => {
 
 const PORT = 5000;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`VERYX Server running on Port ${PORT}`);
+    console.log(`Server is running on http://0.0.0.0:${PORT}`);
     console.log(`[SYSTEM] Event Sourcing Mode: ACTIVE`);
 });

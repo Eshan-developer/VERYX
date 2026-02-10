@@ -21,7 +21,7 @@ class EventStore {
         // Read current history
         const currentData = JSON.parse(fs.readFileSync(DB_PATH));
 
-        // Create SHA256 Hash (Requirement: Fully Auditable)
+        // Stringify payload before hashing
         const hashInput = `${streamId}-${eventType}-${JSON.stringify(payload)}-${new Date().toISOString()}`;
         const auditHash = crypto.createHash('sha256').update(hashInput).digest('hex');
 
