@@ -131,5 +131,79 @@
       "user": "staff@veryx.com",
       "auditHash": "e8df302d53725526581923c4c56248ed25b82f77bf87e1c0d3c7a340363f2246"
     }
+  },
+  {
+    "eventId": "77c0e126-a122-44a3-b96e-b70c3ec2bd5b",
+    "streamId": "d273cc65-8dc7-4ecb-bc6c-93b46829937e",
+    "version": 10,
+    "eventType": "PORTFOLIO_CREATED",
+    "payload": {
+      "name": "Test Portfolio",
+      "budget": 1000,
+      "score": 5
+    },
+    "meta": {
+      "timestamp": "2026-02-10T16:06:02.617Z",
+      "user": "admin@veryx.com",
+      "auditHash": "c93c774ab44d1835a850dfc5ed8c0c2ea58c3efbf5936b5491b82d60befbc99d"
+    }
+  },
+  {
+    "eventId": "9b8531d4-41ae-46e0-87c5-3c5ce9f2324a",
+    "streamId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
+    "version": 11,
+    "eventType": "STAGE_GATE_APPROVED",
+    "payload": {
+      "decision": "PROCEED"
+    },
+    "meta": {
+      "timestamp": "2026-02-10T16:06:04.732Z",
+      "user": "manager@veryx.com",
+      "auditHash": "c2f7dd95513d29adc3cca0d49091d2983d675517820ca196bc35d8f8b9b3d790"
+    }
+  },
+  {
+    "eventId": "b361e087-0596-4f59-83ed-d4c9c36452f0",
+    "streamId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
+    "version": 12,
+    "eventType": "EXPENSE_LOGGED",
+    "payload": {
+      "amount": 500,
+      "description": "Test Expense"
+    },
+    "meta": {
+      "timestamp": "2026-02-10T16:06:06.057Z",
+      "user": "admin@veryx.com",
+      "auditHash": "311abbf4719b906f4a686092552d761bed29d3a475c6bb267e4488d7a50d2242"
+    }
+  },
+  {
+    "eventId": "dbd2de0f-8696-44a4-8fce-6627f0c108f3",
+    "streamId": "88ee6e83-607d-4db1-a7f3-250511b64bda",
+    "version": 13,
+    "eventType": "RESOURCE_ADDED",
+    "payload": {
+      "name": "John Doe",
+      "skill": "Developer"
+    },
+    "meta": {
+      "timestamp": "2026-02-10T16:06:07.169Z",
+      "user": "hr@veryx.com",
+      "auditHash": "1280e3e6afa75b5192bac78756dec771b5888afb014253d90c1c4414a5038151"
+    }
+  },
+  {
+    "eventId": "1e4a4a80-0b49-41dc-9960-018d98c94c09",
+    "streamId": "e1791d45-0767-48a0-8cad-d6b12dbaae34",
+    "version": 14,
+    "eventType": "TIMESHEET_LOGGED",
+    "payload": {
+      "hours": 8
+    },
+    "meta": {
+      "timestamp": "2026-02-10T16:06:08.119Z",
+      "user": "staff@veryx.com",
+      "auditHash": "1b27757029d08c0b82ee942d31fbea23deb7c2e52ec651276fe0a4d3b7bfd962"
+    }
   }
 ]

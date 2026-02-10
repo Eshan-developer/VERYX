@@ -11,29 +11,26 @@ function App() {
   const [workforce, setWorkforce] = useState([]);
   const [newStaff, setNewStaff] = useState({ name: '', skill: '' });
   const [expense, setExpense] = useState({ id: '', amount: '', desc: '' });
+  const [activeTab, setActiveTab] = useState('governance');
 
-  const fetchState = async () => {
+  const fetchData = async () => {
     try {
       const res = await fetch(`${API_URL}/api/query/state`);
       const data = await res.json();
-      if (data) {
-        if (data.portfolios) setPortfolios(data.portfolios);
-        if (data.workforce) setWorkforce(data.workforce);
-      }
-    } catch (err) { console.error(err); }
-  };
+      if (data.portfolios) setPortfolios(data.portfolios);
+      if (data.workforce) setWorkforce(data.workforce);
 
-  const fetchAuditLog = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/query/audit-log`);
-      const data = await res.json();
-      if (Array.isArray(data)) setEvents(data);
-    } catch (err) { console.error(err); }
+      const auditRes = await fetch(`${API_URL}/api/query/audit-log`);
+      const auditData = await auditRes.json();
+      setEvents(auditData.reverse());
+    } catch (err) {
+      console.error("Sync Error", err);
+    }
   };
 
   useEffect(() => {
-    fetchState(); fetchAuditLog();
-    const interval = setInterval(() => { fetchState(); fetchAuditLog(); }, 2000);
+    fetchData();
+    const interval = setInterval(fetchData, 3000);
     return () => clearInterval(interval);
   }, []);
 
