@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-// Update API_URL to use the full GitHub proxy URL without a trailing slash
-const API_URL = "https://psychic-waddle-q7jw959jqxx7cxw5v-5000.app.github.dev"; // Replace with your actual GitHub proxy URL
+const API_URL = 'https://psychic-waddle-q7jw959jqxx7cxw5v-5000.app.github.dev';
 
 function App() {
-  const [portfolios, setPortfolios] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [newProject, setNewProject] = useState({ name: '', budget: '', score: '' });
-  const [workforce, setWorkforce] = useState([]);
-  const [newStaff, setNewStaff] = useState({ name: '', skill: '' });
-  const [expense, setExpense] = useState({ id: '', amount: '', desc: '' });
   const [activeTab, setActiveTab] = useState('governance');
+  const [portfolios, setPortfolios] = useState([]);
+  const [workforce, setWorkforce] = useState([]);
+  const [events, setEvents] = useState([]);
+
+  const [projectForm, setProjectForm] = useState({ name: '', budget: '', score: '' });
+  const [staffForm, setStaffForm] = useState({ name: '', skill: '' });
 
   const fetchData = async () => {
     try {
@@ -24,7 +23,7 @@ function App() {
       const auditData = await auditRes.json();
       setEvents(auditData.reverse());
     } catch (err) {
-      console.error("Sync Error", err);
+      console.error('Sync Error', err);
     }
   };
 
@@ -34,117 +33,227 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleCreate = async () => {
-    if (!newProject.name || !newProject.budget) return;
-    await fetch(`${API_URL}/api/command/create-portfolio`, {
+  const executeCommand = async (path, body) => {
+    await fetch(`${API_URL}${path}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: newProject.name,
-        budget: parseInt(newProject.budget),
-        score: parseInt(newProject.score) || 0,
-        user: 'admin@veryx.com'
-      })
+      body: JSON.stringify(body)
     });
-    setNewProject({ name: '', budget: '', score: '' });
+    fetchData();
   };
-
-  const handleApprove = async (id) => {
-    await fetch(`${API_URL}/api/command/approve-portfolio`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ portfolioId: id, user: 'manager@veryx.com' })
-    });
-  };
-
-  const handleAddStaff = async () => {
-    await fetch(`${API_URL}/api/command/add-resource`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...newStaff, user: 'hr@veryx.com' })
-    });
-    setNewStaff({ name: '', skill: '' });
-};
-
-const handleTimesheet = async (id) => {
-    const hours = prompt("Enter hours worked:");
-    if (!hours) return;
-    await fetch(`${API_URL}/api/command/log-timesheet`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ resourceId: id, hours: parseInt(hours), user: 'staff@veryx.com' })
-    });
-};
 
   return (
-    <div className="App">
-      <header className="header">
-        <h1>VERYX ENTERPRISE OS</h1>
-        <span className="status">Phase 2: Governance & Control</span>
-      </header>
-
-      <div className="container">
-        <div className="card">
-          <h2>Create Portfolio</h2>
-          <input placeholder="Project Name" value={newProject.name} onChange={(e) => setNewProject({...newProject, name: e.target.value})} />
-          <input placeholder="Budget ($)" type="number" value={newProject.budget} onChange={(e) => setNewProject({...newProject, budget: e.target.value})} />
-          <input placeholder="Portfolio Score (1-10)" type="number" value={newProject.score} onChange={(e) => setNewProject({...newProject, score: e.target.value})} />
-          <button onClick={handleCreate}>Execute Command</button>
+    <div className="veryx-layout">
+      <aside className="sidebar">
+        <div className="logo">
+          VERYX<span>OS</span>
         </div>
-
-        <div className="card">
-          <h2>Live Portfolios (Stage-Gate)</h2>
-          <ul>
-            {portfolios.map(p => (
-              <li key={p.id}>
-                <div style={{display:'flex', justifyContent:'space-between'}}>
-                   <span><strong>{p.name}</strong> (Score: {p.score})</span>
-                   <span className={`badge ${p.status}`}>{p.status}</span>
-                </div>
-                {p.status === 'PENDING_APPROVAL' && (
-                  <button className="btn-approve" onClick={() => handleApprove(p.id)}>Approve Stage-Gate</button>
-                )}
-                <div>
-                  <h3>Portfolio Balance: {p.balance}</h3>
-                  <h3 className={p.cpi > 1 ? 'green' : 'red'}>CPI: {p.cpi}</h3>
-                </div>
-              </li>
-            ))}
-          </ul>
+        <nav>
+          <button className={activeTab === 'overview' ? 'active' : ''} onClick={() => setActiveTab('overview')}>
+            📊 Overview
+          </button>
+          <button className={activeTab === 'governance' ? 'active' : ''} onClick={() => setActiveTab('governance')}>
+            🏛️ Governance
+          </button>
+          <button className={activeTab === 'finance' ? 'active' : ''} onClick={() => setActiveTab('finance')}>
+            💰 Finance
+          </button>
+          <button className={activeTab === 'workforce' ? 'active' : ''} onClick={() => setActiveTab('workforce')}>
+            👥 Workforce
+          </button>
+        </nav>
+        <div className="sidebar-footer">
+          <p>User: Admin_01</p>
         </div>
+      </aside>
 
-        <div className="card dark">
-          <h2>Audit Log</h2>
-          <div className="log-window">
-            {events.reverse().map((e, i) => (
-              <div key={i} className="log-entry">
-                <span className="time">{new Date(e.meta.timestamp).toLocaleTimeString()}</span>
-                <span className="type">{e.eventType}</span>
-                <br/><span className="hash">Hash: {e.meta.auditHash.substring(0, 10)}...</span>
+      <main className="main-content">
+        <header className="top-bar">
+          <h2>{activeTab.toUpperCase()} / CONTROL CENTER</h2>
+          <div className="top-actions">
+            <div className="system-health">
+              SYSTEM STATUS: <span className="green">ONLINE</span>
+            </div>
+            <button className="btn-replay">Deterministic Replay</button>
+          </div>
+        </header>
+
+        <section className="workspace">
+          {activeTab === 'overview' && (
+            <div className="tab-view animate-fade">
+              <div className="overview-grid">
+                <div className="data-card">
+                  <h4>Total Portfolios</h4>
+                  <p className="metric">{portfolios.length}</p>
+                </div>
+                <div className="data-card">
+                  <h4>Approved Portfolios</h4>
+                  <p className="metric">{portfolios.filter((p) => p.status === 'APPROVED').length}</p>
+                </div>
+                <div className="data-card">
+                  <h4>Workforce Size</h4>
+                  <p className="metric">{workforce.length}</p>
+                </div>
+                <div className="data-card">
+                  <h4>Event Spine Entries</h4>
+                  <p className="metric">{events.length}</p>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          )}
 
-        <div className="card">
-          <h2>Workforce (Utilization)</h2>
-          <div className="add-box">
-            <input placeholder="Staff Name" value={newStaff.name} onChange={(e)=>setNewStaff({...newStaff, name:e.target.value})} />
-            <button onClick={handleAddStaff}>Add Staff</button>
-          </div>
-          <ul>
-            {workforce.map(w => (
-              <li key={w.id} onClick={() => handleTimesheet(w.id)} style={{cursor:'pointer'}}>
-                <strong>{w.name}</strong> ({w.skill})
-                <div className="progress-bar">
-                   <div className="progress" style={{width: `${w.utilization}%`}}></div>
+          {activeTab === 'governance' && (
+            <div className="tab-view animate-fade">
+              <div className="action-card">
+                <h3>New Initiative</h3>
+                <div className="input-row">
+                  <input
+                    placeholder="Name"
+                    value={projectForm.name}
+                    onChange={(e) => setProjectForm({ ...projectForm, name: e.target.value })}
+                  />
+                  <input
+                    placeholder="Budget"
+                    type="number"
+                    value={projectForm.budget}
+                    onChange={(e) => setProjectForm({ ...projectForm, budget: e.target.value })}
+                  />
+                  <input
+                    placeholder="Score"
+                    type="number"
+                    value={projectForm.score}
+                    onChange={(e) => setProjectForm({ ...projectForm, score: e.target.value })}
+                  />
+                  <button
+                    onClick={() => executeCommand('/api/command/create-portfolio', { ...projectForm, user: 'ADMIN' })}
+                  >
+                    Create
+                  </button>
                 </div>
-                <small>{w.utilization}% Utilized</small>
-              </li>
-            ))}
-          </ul>
+              </div>
+              <div className="grid">
+                {portfolios.map((p) => (
+                  <div key={p.id} className="data-card">
+                    <h4>{p.name}</h4>
+                    <p>ID: {p.id.substring(0, 8)}</p>
+                    <div className={`status-tag ${p.status}`}>{p.status}</div>
+                    {p.status === 'PENDING_APPROVAL' && (
+                      <button
+                        className="btn-action"
+                        onClick={() =>
+                          executeCommand('/api/command/approve-portfolio', {
+                            portfolioId: p.id,
+                            user: 'MANAGER'
+                          })
+                        }
+                      >
+                        Approve Gate
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'finance' && (
+            <div className="tab-view animate-fade">
+              <div className="grid">
+                {portfolios
+                  .filter((p) => p.status === 'APPROVED')
+                  .map((p) => (
+                    <div key={p.id} className="finance-card">
+                      <header>
+                        <h4>{p.name}</h4>
+                        <span className={p.cpi < 1 ? 'bad' : 'good'}>CPI: {p.cpi}</span>
+                      </header>
+                      <div className="stats">
+                        <div>
+                          <small>Balance</small>
+                          <strong>${p.balance}</strong>
+                        </div>
+                        <div className="progress-container">
+                          <div className="progress-fill" style={{ width: `${(p.balance / p.initialBudget) * 100}%` }} />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'workforce' && (
+            <div className="tab-view animate-fade">
+              <div className="action-card">
+                <h3>Onboard Resource</h3>
+                <div className="input-row staff-input-row">
+                  <input
+                    placeholder="Staff Name"
+                    value={staffForm.name}
+                    onChange={(e) => setStaffForm({ ...staffForm, name: e.target.value })}
+                  />
+                  <input
+                    placeholder="Role"
+                    value={staffForm.skill}
+                    onChange={(e) => setStaffForm({ ...staffForm, skill: e.target.value })}
+                  />
+                  <button onClick={() => executeCommand('/api/command/add-resource', { ...staffForm, user: 'HR' })}>Add</button>
+                </div>
+              </div>
+              <table className="staff-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Skill</th>
+                    <th>Utilization</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {workforce.map((w) => (
+                    <tr key={w.id}>
+                      <td>{w.name}</td>
+                      <td>{w.skill}</td>
+                      <td>
+                        <div className="util-bar">
+                          <div className="util-fill" style={{ width: `${w.utilization}%` }} />
+                        </div>
+                        {w.utilization}%
+                      </td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            const h = prompt('Hours?');
+                            if (h) executeCommand('/api/command/log-timesheet', { resourceId: w.id, hours: h, user: 'USER' });
+                          }}
+                        >
+                          Log Time
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      </main>
+
+      <aside className="audit-sidebar">
+        <h3>EVENT SPINE</h3>
+        <div className="event-list">
+          {events.map((e, i) => (
+            <div key={i} className="event-item">
+              <div className="dot" />
+              <div className="event-info">
+                <strong>{e.eventType}</strong>
+                <p>Hash: {e.meta.auditHash.substring(0, 12)}...</p>
+                <small>{new Date(e.meta.timestamp).toLocaleTimeString()}</small>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
+      </aside>
     </div>
   );
 }
