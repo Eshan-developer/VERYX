@@ -106,3 +106,20 @@ li {
   color: #90a4ae;
   font-size: 10px;
 }
+
+.badge.PENDING_APPROVAL { background: #fff3e0; color: #ef6c00; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
+.badge.APPROVED { background: #e8f5e9; color: #2e7d32; padding: 2px 6px; border-radius: 4px; font-size: 10px; }
+
+.btn-approve {
+    background-color: #2e7d32;
+    font-size: 11px;
+    padding: 6px;
+    margin-top: 10px;
+    border-radius: 4px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-approve:hover { background-color: #1b5e20; }

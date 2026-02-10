@@ -13,5 +13,19 @@
       "user": "admin@veryx.com",
       "auditHash": "9eb4de5b9868afc0d4bd6947529fb479265951fedd43b748c0720ea131209e6c"
     }
+  },
+  {
+    "eventId": "eee3e833-0f62-4e97-942d-3b8f8cd225f3",
+    "streamId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
+    "version": 2,
+    "eventType": "STAGE_GATE_APPROVED",
+    "payload": {
+      "decision": "PROCEED"
+    },
+    "meta": {
+      "timestamp": "2026-02-10T15:24:43.377Z",
+      "user": "manager@veryx.com",
+      "auditHash": "59bc2aeb80217d458dd3fb595ec5714330639612068edb8c00fa553819159d67"
+    }
   }
 ]

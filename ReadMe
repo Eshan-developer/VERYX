@@ -1,1 +1,15 @@
+# VERYX Enterprise OS - Phase 1 Core
+Status: **Functional / Verified**
+
+### Features implemented:
+- **Command Gateway:** REST API for business commands.
+- **Immutable Event Store:** Append-only JSON log with SHA-256 Audit Hashes.
+- **Projection Engine:** Deterministic state replay from event history.
+- **Real-time UI:** React dashboard with live audit logging.
+
+### How to Run:
+1. `node server.js` (Backend on Port 5000)
+2. `cd client && npm start` (Frontend on Port 3000)
+3. Set Ports to **Public** in GitHub Codespaces.
+
 By Widhia Solanki
