@@ -199,6 +199,13 @@ button {
   cursor: pointer;
 }
 
+button:disabled,
+button[aria-disabled='true'] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -366,7 +373,7 @@ button {
 }
 
 .watermark::before {
-  content: 'VERYX AUDITED';
+  content: 'OFFICIAL AUDIT';
   position: absolute;
   inset: 0;
   display: flex;
@@ -479,6 +486,32 @@ button {
   letter-spacing: 1px;
   color: var(--muted);
   margin-bottom: 12px;
+}
+
+.toast {
+  position: fixed;
+  top: 72px;
+  right: 24px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  z-index: 20;
+  box-shadow: 0 8px 20px -10px rgba(16, 24, 40, 0.35);
+}
+
+.toast.success {
+  border-color: #bbf7d0;
+  color: #166534;
+  background: #f0fdf4;
+}
+
+.toast.error {
+  border-color: #fecaca;
+  color: #991b1b;
+  background: #fef2f2;
 }
 
 @keyframes fadeIn {

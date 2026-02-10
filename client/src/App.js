@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 
-const API_URL = 'https://psychic-waddle-q7jw959jqxx7cxw5v-5000.app.github.dev';
+const API_URL = (() => {
+  if (typeof window === 'undefined') return 'https://psychic-waddle-q7jw959jqxx7cxw5v-5000.app.github.dev';
+  const host = window.location.host;
+  if (host.includes('-3000')) {
+    return `https://${host.replace('-3000', '-5000')}`;
+  }
+  return `https://${host}`;
+})();
 
 function App() {
   const [activeTab, setActiveTab] = useState('governance');
@@ -14,6 +21,10 @@ function App() {
   const [esgSummary, setEsgSummary] = useState({ scope1: 0, scope2: 0, scope3: 0 });
   const [systemIntegrity, setSystemIntegrity] = useState('VERIFIED');
   const [notification, setNotification] = useState(null);
+  const [evidenceGenerated, setEvidenceGenerated] = useState({});
+  const [evidenceBusy, setEvidenceBusy] = useState(false);
+  const [evidenceBusyId, setEvidenceBusyId] = useState(null);
+  const evidenceLockRef = useRef(false);
 
   const [projectForm, setProjectForm] = useState({ name: '', budget: '', score: '' });
   const [staffForm, setStaffForm] = useState({ name: '', skill: '' });
@@ -31,6 +42,7 @@ function App() {
     setLoading(true);
     setError(null);
     try {
+      console.log('FETCH URL:', `${API_URL}/api/query/state`);
       const res = await fetch(`${API_URL}/api/query/state`);
       if (!res.ok) throw new Error('Failed to fetch state');
       const data = await res.json();
@@ -46,6 +58,13 @@ function App() {
       if (!auditRes.ok) throw new Error('Failed to fetch audit log');
       const auditData = await auditRes.json();
       setEvents(auditData.reverse());
+      if (data.evidencePacks) {
+        const generatedMap = {};
+        data.evidencePacks.forEach((pack) => {
+          if (pack.portfolioId) generatedMap[pack.portfolioId] = true;
+        });
+        setEvidenceGenerated(generatedMap);
+      }
 
       const integrityRes = await fetch(`${API_URL}/api/system/integrity`);
       if (integrityRes.ok) {
@@ -114,6 +133,10 @@ function App() {
 
   const generateEvidence = async (portfolioId) => {
     try {
+      if (evidenceLockRef.current) return;
+      evidenceLockRef.current = true;
+      setEvidenceBusy(true);
+      setEvidenceBusyId(portfolioId);
       const res = await fetch(`${API_URL}/api/command/generate-evidence`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -130,12 +153,16 @@ function App() {
       }
 
       setError(null);
-      notify('success', 'Evidence generated');
-      fetchData();
+      notify('success', 'Evidence Generated');
+      await fetchData();
     } catch (err) {
       console.error('Evidence Error', err);
       setError('System Offline. Please try again later.');
       notify('error', 'Evidence generation failed');
+    } finally {
+      setEvidenceBusy(false);
+      setEvidenceBusyId(null);
+      evidenceLockRef.current = false;
     }
   };
 
@@ -158,6 +185,19 @@ function App() {
       console.error('Replay Error', err);
       setError('System Offline. Please try again later.');
       notify('error', 'Replay failed');
+    }
+  };
+
+  const reverifyIntegrity = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/system/integrity`);
+      if (!res.ok) throw new Error('Integrity check failed');
+      const data = await res.json();
+      if (data.systemIntegrity) setSystemIntegrity(data.systemIntegrity);
+      notify('success', 'Integrity check complete');
+    } catch (err) {
+      console.error('Integrity Error', err);
+      notify('error', 'Integrity check failed');
     }
   };
 
@@ -244,13 +284,18 @@ function App() {
         </aside>
 
         <main className="main-content">
-          <section className="workspace">
-          {error && (
-            <div className="action-card">
-              <strong>System Offline</strong>
-              <p>{error}</p>
+          {notification && (
+            <div className={`toast ${notification.type}`}>
+              {notification.message}
             </div>
           )}
+          <section className="workspace">
+            {error && (
+              <div className="action-card">
+                <strong>System Offline</strong>
+                <p>{error}</p>
+              </div>
+            )}
           {activeTab === 'overview' && (
             <div className="tab-view animate-fade">
               <div className="overview-grid">
@@ -331,10 +376,19 @@ function App() {
                     )}
                     <button
                       className="btn-action"
-                      disabled={p.status !== 'APPROVED'}
+                      disabled={
+                        p.status !== 'APPROVED' ||
+                        (evidenceBusy && evidenceBusyId === p.id) ||
+                        evidenceGenerated[p.id]
+                      }
+                      aria-disabled={p.status !== 'APPROVED' || (evidenceBusy && evidenceBusyId === p.id)}
                       onClick={() => generateEvidence(p.id)}
                     >
-                      Generate Court-Grade Evidence
+                      {evidenceGenerated[p.id]
+                        ? 'Evidence Generated'
+                        : evidenceBusy && evidenceBusyId === p.id
+                        ? 'Generating Evidence...'
+                        : 'Generate Court-Grade Evidence'}
                     </button>
                   </div>
                 ))}
@@ -534,7 +588,23 @@ function App() {
               </div>
             </div>
           )}
-          </section>
+
+            {activeTab === 'settings' && (
+              <div className="tab-view animate-fade">
+                <div className="data-card">
+                  <h4>System Integrity Status</h4>
+                  <p className="metric">
+                    {systemIntegrity === 'VERIFIED' ? 'Verified: No Tampering Detected' : 'COMPROMISED'}
+                  </p>
+                  <button className="btn-action" onClick={reverifyIntegrity}>Re-Verify</button>
+                </div>
+                <div className="data-card">
+                  <h4>API Connection URL</h4>
+                  <p>{API_URL}</p>
+                </div>
+            </div>
+          )}
+        </section>
         </main>
 
         <aside className="audit-sidebar">

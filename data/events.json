@@ -1,419 +1,89 @@
 [
   {
-    "eventId": "2ba1cf06-d66c-4002-8f59-ed21788666e1",
-    "streamId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
+    "eventId": "e74d8dc0-346f-430e-9b6a-cc0c63d7bfc6",
+    "streamId": "773ba351-37bd-4194-97bc-a435bb0cf280",
     "version": 1,
     "eventType": "PORTFOLIO_CREATED",
     "payload": {
-      "name": "xyz",
-      "budget": 50
+      "name": "XyZ",
+      "budget": "50",
+      "score": "10"
     },
     "meta": {
-      "timestamp": "2026-02-10T14:50:27.586Z",
-      "user": "admin@veryx.com",
-      "auditHash": "9eb4de5b9868afc0d4bd6947529fb479265951fedd43b748c0720ea131209e6c"
+      "timestamp": "2026-02-10T18:42:03.213Z",
+      "user": "ADMIN",
+      "auditHash": "99a3eb8c94096aaedfa0795fa6c02d4666bace494b30173d511fca217522d9da"
     }
   },
   {
-    "eventId": "eee3e833-0f62-4e97-942d-3b8f8cd225f3",
-    "streamId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
+    "eventId": "4899af9e-860c-4f9c-8289-2077b30ec55b",
+    "streamId": "773ba351-37bd-4194-97bc-a435bb0cf280",
     "version": 2,
     "eventType": "STAGE_GATE_APPROVED",
     "payload": {
       "decision": "PROCEED"
     },
     "meta": {
-      "timestamp": "2026-02-10T15:24:43.377Z",
-      "user": "manager@veryx.com",
-      "auditHash": "59bc2aeb80217d458dd3fb595ec5714330639612068edb8c00fa553819159d67"
+      "timestamp": "2026-02-10T18:42:06.410Z",
+      "user": "MANAGER",
+      "auditHash": "116d38a4ee74bdacdb8bffb90f00d8459bddb0fff4f09007170d078173e2f12c"
     }
   },
   {
-    "eventId": "c2ef2d81-a3fb-4144-957b-d9148dbf4b9e",
-    "streamId": "f1c22ae6-ec16-442f-a9b3-1d2da4e15bec",
+    "eventId": "a7b08ddc-4a96-4257-8988-ec9e711fdfb4",
+    "streamId": "2575f4ec-6ac0-40c9-807d-b69195e2df59",
     "version": 3,
-    "eventType": "PORTFOLIO_CREATED",
+    "eventType": "EVIDENCE_PACK_GENERATED",
     "payload": {
-      "name": "Core at Me",
-      "budget": 50,
-      "score": 5
+      "portfolioId": "773ba351-37bd-4194-97bc-a435bb0cf280",
+      "eventId": "4899af9e-860c-4f9c-8289-2077b30ec55b",
+      "versionHash": "116d38a4ee74bdacdb8bffb90f00d8459bddb0fff4f09007170d078173e2f12c",
+      "userId": "MANAGER",
+      "timestamp": "2026-02-10T18:42:06.410Z",
+      "watermark": "WATERMARKED"
     },
     "meta": {
-      "timestamp": "2026-02-10T15:48:49.323Z",
-      "user": "admin@veryx.com",
-      "auditHash": "cab4ccfa2aa471e77fc91b670b8127ba37a01c38a75d997f090aa1f7bf15aa31"
+      "timestamp": "2026-02-10T18:42:08.003Z",
+      "user": "ADMIN",
+      "auditHash": "7e3d71028d1de0bec57a38137e9a3a7d152f9a26acec16c8654d84d0b4cf1da3"
     }
   },
   {
-    "eventId": "83eac977-4bb8-41b5-82e0-4ef49c08fa0d",
-    "streamId": "f1c22ae6-ec16-442f-a9b3-1d2da4e15bec",
+    "eventId": "0f0297e0-51e1-4933-90e0-6300b2964606",
+    "streamId": "7b4665b6-9882-491f-a847-753ca8e318b0",
     "version": 4,
-    "eventType": "STAGE_GATE_APPROVED",
+    "eventType": "EVIDENCE_PACK_GENERATED",
     "payload": {
-      "decision": "PROCEED"
+      "portfolioId": "773ba351-37bd-4194-97bc-a435bb0cf280",
+      "eventId": "4899af9e-860c-4f9c-8289-2077b30ec55b",
+      "versionHash": "116d38a4ee74bdacdb8bffb90f00d8459bddb0fff4f09007170d078173e2f12c",
+      "userId": "MANAGER",
+      "timestamp": "2026-02-10T18:42:06.410Z",
+      "watermark": "WATERMARKED"
     },
     "meta": {
-      "timestamp": "2026-02-10T15:49:00.317Z",
-      "user": "manager@veryx.com",
-      "auditHash": "045a0981714e75b7b05309cf62a8db4590d24b6407df888aae69af89ada64d39"
+      "timestamp": "2026-02-10T18:42:11.759Z",
+      "user": "ADMIN",
+      "auditHash": "0d346005aa212f3a6d2a5bb8713930502a20350585e427a4db0fd05f99f626a6"
     }
   },
   {
-    "eventId": "13ab596b-88d2-4314-bc57-3a885798a061",
-    "streamId": "682d33bf-e7b5-4caf-baef-1654be45608f",
+    "eventId": "39da9799-0988-4f10-aa51-8b569c4f0e2f",
+    "streamId": "d2a9e1f5-977c-4be3-b13f-349352713051",
     "version": 5,
-    "eventType": "PORTFOLIO_CREATED",
-    "payload": {
-      "name": "ni",
-      "budget": -50,
-      "score": 5
-    },
-    "meta": {
-      "timestamp": "2026-02-10T15:49:27.344Z",
-      "user": "admin@veryx.com",
-      "auditHash": "b161c4ccc99e77082ec85969c6d64e4dcbae8e67a2e527238df4b19f18e5f4da"
-    }
-  },
-  {
-    "eventId": "2c9128e0-bcc1-46fb-8f22-6db4c95ffd74",
-    "streamId": "682d33bf-e7b5-4caf-baef-1654be45608f",
-    "version": 6,
-    "eventType": "STAGE_GATE_APPROVED",
-    "payload": {
-      "decision": "PROCEED"
-    },
-    "meta": {
-      "timestamp": "2026-02-10T15:49:30.339Z",
-      "user": "manager@veryx.com",
-      "auditHash": "13ef279db59b605bbe4128a71c9476ef4967a8473c53a4c1e8f07137cf497eb7"
-    }
-  },
-  {
-    "eventId": "b7446b9b-f863-4a40-b5a3-96d4a55f08c5",
-    "streamId": "e1791d45-0767-48a0-8cad-d6b12dbaae34",
-    "version": 7,
-    "eventType": "RESOURCE_ADDED",
-    "payload": {
-      "name": "",
-      "skill": ""
-    },
-    "meta": {
-      "timestamp": "2026-02-10T15:56:34.167Z",
-      "user": "hr@veryx.com",
-      "auditHash": "5f2cddda4c9c9b6ebaf4f6b38fcdaefababe75da336336540e5b536fe4ee78f7"
-    }
-  },
-  {
-    "eventId": "f0778773-1094-49c3-b214-9e33c18eb976",
-    "streamId": "c15ed75d-3a51-4e68-8a61-0fdbcb44e125",
-    "version": 8,
-    "eventType": "RESOURCE_ADDED",
-    "payload": {
-      "name": "Eshan",
-      "skill": ""
-    },
-    "meta": {
-      "timestamp": "2026-02-10T15:56:57.911Z",
-      "user": "hr@veryx.com",
-      "auditHash": "b4097a04350f27353b0b2a6ceeaec38bdf2a391e08cd3aad21dfc41e624e86e4"
-    }
-  },
-  {
-    "eventId": "f423eca2-68ca-4fe5-afb0-fb9e31bb4da4",
-    "streamId": "c15ed75d-3a51-4e68-8a61-0fdbcb44e125",
-    "version": 9,
-    "eventType": "TIMESHEET_LOGGED",
-    "payload": {
-      "hours": 5
-    },
-    "meta": {
-      "timestamp": "2026-02-10T15:57:07.210Z",
-      "user": "staff@veryx.com",
-      "auditHash": "e8df302d53725526581923c4c56248ed25b82f77bf87e1c0d3c7a340363f2246"
-    }
-  },
-  {
-    "eventId": "77c0e126-a122-44a3-b96e-b70c3ec2bd5b",
-    "streamId": "d273cc65-8dc7-4ecb-bc6c-93b46829937e",
-    "version": 10,
-    "eventType": "PORTFOLIO_CREATED",
-    "payload": {
-      "name": "Test Portfolio",
-      "budget": 1000,
-      "score": 5
-    },
-    "meta": {
-      "timestamp": "2026-02-10T16:06:02.617Z",
-      "user": "admin@veryx.com",
-      "auditHash": "c93c774ab44d1835a850dfc5ed8c0c2ea58c3efbf5936b5491b82d60befbc99d"
-    }
-  },
-  {
-    "eventId": "9b8531d4-41ae-46e0-87c5-3c5ce9f2324a",
-    "streamId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
-    "version": 11,
-    "eventType": "STAGE_GATE_APPROVED",
-    "payload": {
-      "decision": "PROCEED"
-    },
-    "meta": {
-      "timestamp": "2026-02-10T16:06:04.732Z",
-      "user": "manager@veryx.com",
-      "auditHash": "c2f7dd95513d29adc3cca0d49091d2983d675517820ca196bc35d8f8b9b3d790"
-    }
-  },
-  {
-    "eventId": "b361e087-0596-4f59-83ed-d4c9c36452f0",
-    "streamId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
-    "version": 12,
-    "eventType": "EXPENSE_LOGGED",
-    "payload": {
-      "amount": 500,
-      "description": "Test Expense"
-    },
-    "meta": {
-      "timestamp": "2026-02-10T16:06:06.057Z",
-      "user": "admin@veryx.com",
-      "auditHash": "311abbf4719b906f4a686092552d761bed29d3a475c6bb267e4488d7a50d2242"
-    }
-  },
-  {
-    "eventId": "dbd2de0f-8696-44a4-8fce-6627f0c108f3",
-    "streamId": "88ee6e83-607d-4db1-a7f3-250511b64bda",
-    "version": 13,
-    "eventType": "RESOURCE_ADDED",
-    "payload": {
-      "name": "John Doe",
-      "skill": "Developer"
-    },
-    "meta": {
-      "timestamp": "2026-02-10T16:06:07.169Z",
-      "user": "hr@veryx.com",
-      "auditHash": "1280e3e6afa75b5192bac78756dec771b5888afb014253d90c1c4414a5038151"
-    }
-  },
-  {
-    "eventId": "1e4a4a80-0b49-41dc-9960-018d98c94c09",
-    "streamId": "e1791d45-0767-48a0-8cad-d6b12dbaae34",
-    "version": 14,
-    "eventType": "TIMESHEET_LOGGED",
-    "payload": {
-      "hours": 8
-    },
-    "meta": {
-      "timestamp": "2026-02-10T16:06:08.119Z",
-      "user": "staff@veryx.com",
-      "auditHash": "1b27757029d08c0b82ee942d31fbea23deb7c2e52ec651276fe0a4d3b7bfd962"
-    }
-  },
-  {
-    "eventId": "724214dc-02f5-40e8-8f9c-c3418493f609",
-    "streamId": "d273cc65-8dc7-4ecb-bc6c-93b46829937e",
-    "version": 15,
-    "eventType": "STAGE_GATE_APPROVED",
-    "payload": {
-      "decision": "PROCEED"
-    },
-    "meta": {
-      "timestamp": "2026-02-10T16:40:18.323Z",
-      "user": "manager@veryx.com",
-      "auditHash": "f1c21c5d50c1870421e37d0efe66cdf1f751837801a22590f000a9dc6c3ce614"
-    }
-  },
-  {
-    "eventId": "ca8a7010-b674-4e17-89ac-3211870afc27",
-    "streamId": "ACU_LEDGER",
-    "version": 16,
-    "eventType": "ACU_DEDUCTED",
-    "payload": {
-      "amount": 10
-    },
-    "meta": {
-      "timestamp": "2026-02-10T17:06:43.810Z",
-      "user": "ADMIN",
-      "auditHash": "6ae33dbb24c4e26b45cf2bc10d6b6aeec83e0b76699f5d26ea27a6e17d71918d"
-    }
-  },
-  {
-    "eventId": "c36cf556-3d56-4409-b286-ac6e7589e13f",
-    "streamId": "ca8a7010-b674-4e17-89ac-3211870afc27",
-    "version": 17,
-    "eventType": "AI_COMPLETED",
-    "payload": {
-      "requestType": "Reasoning/Forecasting",
-      "provider": "OpenAI",
-      "result": "OpenAI mock result for Reasoning/Forecasting: Run portfolio forecasting."
-    },
-    "meta": {
-      "timestamp": "2026-02-10T17:06:43.811Z",
-      "user": "ADMIN",
-      "auditHash": "f6df4e0bdde5901f1719428d81468d192dd07bd7092921bbdf9b7f516856eb21"
-    }
-  },
-  {
-    "eventId": "9b0d51c6-07b0-4373-b07c-c24c102b825f",
-    "streamId": "ACU_LEDGER",
-    "version": 18,
-    "eventType": "ACU_DEDUCTED",
-    "payload": {
-      "amount": 10
-    },
-    "meta": {
-      "timestamp": "2026-02-10T17:06:53.438Z",
-      "user": "ADMIN",
-      "auditHash": "9fa3bcc3214c91df0dde6cda30a384a6a1c210359499f20670edebda8199af92"
-    }
-  },
-  {
-    "eventId": "dc303ecb-d283-4164-bd3b-09e5cff2337b",
-    "streamId": "9b0d51c6-07b0-4373-b07c-c24c102b825f",
-    "version": 19,
-    "eventType": "AI_COMPLETED",
-    "payload": {
-      "requestType": "Vision/Docs",
-      "provider": "Gemini",
-      "result": "Gemini mock result for Vision/Docs: Analyze assets with vision and docs."
-    },
-    "meta": {
-      "timestamp": "2026-02-10T17:06:53.439Z",
-      "user": "ADMIN",
-      "auditHash": "d9a8770374563655216ef4d61f59a09d604ce4397a150f8908165df1e191d2f3"
-    }
-  },
-  {
-    "eventId": "61f9c7bb-297c-4b29-bb7a-98ec874ea4a2",
-    "streamId": "12adc24e-4946-4f95-890d-1fabc9da51b0",
-    "version": 20,
     "eventType": "EVIDENCE_PACK_GENERATED",
     "payload": {
-      "portfolioId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
-      "eventId": "b361e087-0596-4f59-83ed-d4c9c36452f0",
-      "versionHash": "311abbf4719b906f4a686092552d761bed29d3a475c6bb267e4488d7a50d2242",
-      "userId": "admin@veryx.com",
-      "timestamp": "2026-02-10T16:06:06.057Z",
+      "portfolioId": "773ba351-37bd-4194-97bc-a435bb0cf280",
+      "eventId": "4899af9e-860c-4f9c-8289-2077b30ec55b",
+      "versionHash": "116d38a4ee74bdacdb8bffb90f00d8459bddb0fff4f09007170d078173e2f12c",
+      "userId": "MANAGER",
+      "timestamp": "2026-02-10T18:42:06.410Z",
       "watermark": "WATERMARKED"
     },
     "meta": {
-      "timestamp": "2026-02-10T17:22:04.781Z",
+      "timestamp": "2026-02-10T18:42:20.592Z",
       "user": "ADMIN",
-      "auditHash": "a5d5ddfaf2303ed14e002c0d97796b0754bd9c7e9aa571af7e2d226671ec5eee"
-    }
-  },
-  {
-    "eventId": "942b0603-e137-4fc9-9b60-f85c1f498b9b",
-    "streamId": "86dbe13c-965a-411d-89d0-81246ec41f06",
-    "version": 21,
-    "eventType": "EVIDENCE_PACK_GENERATED",
-    "payload": {
-      "portfolioId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
-      "eventId": "b361e087-0596-4f59-83ed-d4c9c36452f0",
-      "versionHash": "311abbf4719b906f4a686092552d761bed29d3a475c6bb267e4488d7a50d2242",
-      "userId": "admin@veryx.com",
-      "timestamp": "2026-02-10T16:06:06.057Z",
-      "watermark": "WATERMARKED"
-    },
-    "meta": {
-      "timestamp": "2026-02-10T17:22:08.355Z",
-      "user": "ADMIN",
-      "auditHash": "b390ca3339989cd45720ee030c629f0be696e977459e8e76fa4edd4107745f5e"
-    }
-  },
-  {
-    "eventId": "e0bde635-8b9f-4d06-a207-a26df46149f2",
-    "streamId": "142ffca0-641a-4fda-928b-f3bc28d426b1",
-    "version": 22,
-    "eventType": "EVIDENCE_PACK_GENERATED",
-    "payload": {
-      "portfolioId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
-      "eventId": "b361e087-0596-4f59-83ed-d4c9c36452f0",
-      "versionHash": "311abbf4719b906f4a686092552d761bed29d3a475c6bb267e4488d7a50d2242",
-      "userId": "admin@veryx.com",
-      "timestamp": "2026-02-10T16:06:06.057Z",
-      "watermark": "WATERMARKED"
-    },
-    "meta": {
-      "timestamp": "2026-02-10T17:22:10.525Z",
-      "user": "ADMIN",
-      "auditHash": "9f4143f04fed4db85951478a0b34d7216d81055ad73874a5514eafc49d8dbed3"
-    }
-  },
-  {
-    "eventId": "bdb9bf51-2ba4-4782-88b1-b6edef288cb5",
-    "streamId": "69480fe3-fa92-4579-afbf-7bd71d6a8b14",
-    "version": 23,
-    "eventType": "EVIDENCE_PACK_GENERATED",
-    "payload": {
-      "portfolioId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
-      "eventId": "b361e087-0596-4f59-83ed-d4c9c36452f0",
-      "versionHash": "311abbf4719b906f4a686092552d761bed29d3a475c6bb267e4488d7a50d2242",
-      "userId": "admin@veryx.com",
-      "timestamp": "2026-02-10T16:06:06.057Z",
-      "watermark": "WATERMARKED"
-    },
-    "meta": {
-      "timestamp": "2026-02-10T17:22:10.850Z",
-      "user": "ADMIN",
-      "auditHash": "c8a37a4c75e70b739ea62402d1da3171c57cf251fa7e955a55ff83fbcc31a4e9"
-    }
-  },
-  {
-    "eventId": "6bb57ed7-66d8-4281-9db4-1664b55c65ed",
-    "streamId": "ACU_LEDGER",
-    "version": 24,
-    "eventType": "ACU_DEDUCTED",
-    "payload": {
-      "amount": 10
-    },
-    "meta": {
-      "timestamp": "2026-02-10T17:36:36.703Z",
-      "user": "ADMIN",
-      "auditHash": "c88fd3c29d383a38281d0b85e6464f2802352ae94803f4a4bc95292b39127a7d"
-    }
-  },
-  {
-    "eventId": "750cfb46-13c5-4113-be97-60191fb95abf",
-    "streamId": "6bb57ed7-66d8-4281-9db4-1664b55c65ed",
-    "version": 25,
-    "eventType": "AI_COMPLETED",
-    "payload": {
-      "requestType": "Reasoning/Forecasting",
-      "provider": "OpenAI",
-      "result": "OpenAI mock result for Reasoning/Forecasting: Run portfolio forecasting."
-    },
-    "meta": {
-      "timestamp": "2026-02-10T17:36:36.704Z",
-      "user": "ADMIN",
-      "auditHash": "8a07717b0b19650781fee9d269581afc0b4ba7e5fbcff300989129739c031a6b"
-    }
-  },
-  {
-    "eventId": "c17dcc6c-1f90-44f1-af8e-c1b6aa8ad074",
-    "streamId": "ACU_LEDGER",
-    "version": 26,
-    "eventType": "ACU_DEDUCTED",
-    "payload": {
-      "amount": 10
-    },
-    "meta": {
-      "timestamp": "2026-02-10T17:36:38.533Z",
-      "user": "ADMIN",
-      "auditHash": "052de0a808783f5e56d73c0adf96db1c592f3de87a4fa004624b333fdf90a7bf"
-    }
-  },
-  {
-    "eventId": "613007d0-68f6-40ee-bc13-3867aefe6d60",
-    "streamId": "c17dcc6c-1f90-44f1-af8e-c1b6aa8ad074",
-    "version": 27,
-    "eventType": "AI_COMPLETED",
-    "payload": {
-      "requestType": "Vision/Docs",
-      "provider": "Gemini",
-      "result": "Gemini mock result for Vision/Docs: Analyze assets with vision and docs."
-    },
-    "meta": {
-      "timestamp": "2026-02-10T17:36:38.534Z",
-      "user": "ADMIN",
-      "auditHash": "3b81e4de00497f16a75dfd3e689686950debd82742597d3c110bc626c4965469"
+      "auditHash": "6c012e36b060c0eb1c30a046d70c6eb7e61297e9ce7a901da874ac57ab4555c7"
     }
   }
 ]

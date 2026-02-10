@@ -19,10 +19,17 @@ class EventStore {
     // 1. APPEND EVENT (Write Only)
     append(streamId, eventType, payload, user) {
         // Read current history
-        const currentData = JSON.parse(fs.readFileSync(DB_PATH));
+        let currentData = [];
+        try {
+            const raw = fs.readFileSync(DB_PATH);
+            currentData = JSON.parse(raw);
+        } catch (err) {
+            if (!(err instanceof SyntaxError)) throw err;
+            currentData = [];
+        }
 
-        // Stringify payload before hashing
-        const hashInput = `${streamId}-${eventType}-${JSON.stringify(payload)}-${new Date().toISOString()}`;
+        const timestamp = new Date().toISOString();
+        const hashInput = JSON.stringify({ streamId, eventType, payload, timestamp });
         const auditHash = crypto.createHash('sha256').update(hashInput).digest('hex');
 
         const newEvent = {
@@ -32,7 +39,7 @@ class EventStore {
             eventType: eventType,
             payload: payload,
             meta: {
-                timestamp: new Date().toISOString(),
+                timestamp: timestamp,
                 user: user || 'system',
                 auditHash: auditHash
             }
@@ -49,7 +56,12 @@ class EventStore {
     // 2. READ ALL (For Replay)
     getAllEvents() {
         if (!fs.existsSync(DB_PATH)) return [];
-        return JSON.parse(fs.readFileSync(DB_PATH));
+        try {
+            return JSON.parse(fs.readFileSync(DB_PATH));
+        } catch (err) {
+            if (err instanceof SyntaxError) return [];
+            throw err;
+        }
     }
 }
 

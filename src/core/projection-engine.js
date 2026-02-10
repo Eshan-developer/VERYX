@@ -18,7 +18,12 @@ class ProjectionEngine {
     verifyChain(events) {
         let integrity = 'VERIFIED';
         for (const event of events) {
-            const hashInput = `${event.streamId}-${event.eventType}-${JSON.stringify(event.payload)}-${event.meta.timestamp}`;
+            const hashInput = JSON.stringify({
+                streamId: event.streamId,
+                eventType: event.eventType,
+                payload: event.payload,
+                timestamp: event.meta.timestamp
+            });
             const expectedHash = crypto.createHash('sha256').update(hashInput).digest('hex');
             if (expectedHash !== event.meta.auditHash) {
                 integrity = 'COMPROMISED';
