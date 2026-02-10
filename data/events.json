@@ -205,5 +205,215 @@
       "user": "staff@veryx.com",
       "auditHash": "1b27757029d08c0b82ee942d31fbea23deb7c2e52ec651276fe0a4d3b7bfd962"
     }
+  },
+  {
+    "eventId": "724214dc-02f5-40e8-8f9c-c3418493f609",
+    "streamId": "d273cc65-8dc7-4ecb-bc6c-93b46829937e",
+    "version": 15,
+    "eventType": "STAGE_GATE_APPROVED",
+    "payload": {
+      "decision": "PROCEED"
+    },
+    "meta": {
+      "timestamp": "2026-02-10T16:40:18.323Z",
+      "user": "manager@veryx.com",
+      "auditHash": "f1c21c5d50c1870421e37d0efe66cdf1f751837801a22590f000a9dc6c3ce614"
+    }
+  },
+  {
+    "eventId": "ca8a7010-b674-4e17-89ac-3211870afc27",
+    "streamId": "ACU_LEDGER",
+    "version": 16,
+    "eventType": "ACU_DEDUCTED",
+    "payload": {
+      "amount": 10
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:06:43.810Z",
+      "user": "ADMIN",
+      "auditHash": "6ae33dbb24c4e26b45cf2bc10d6b6aeec83e0b76699f5d26ea27a6e17d71918d"
+    }
+  },
+  {
+    "eventId": "c36cf556-3d56-4409-b286-ac6e7589e13f",
+    "streamId": "ca8a7010-b674-4e17-89ac-3211870afc27",
+    "version": 17,
+    "eventType": "AI_COMPLETED",
+    "payload": {
+      "requestType": "Reasoning/Forecasting",
+      "provider": "OpenAI",
+      "result": "OpenAI mock result for Reasoning/Forecasting: Run portfolio forecasting."
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:06:43.811Z",
+      "user": "ADMIN",
+      "auditHash": "f6df4e0bdde5901f1719428d81468d192dd07bd7092921bbdf9b7f516856eb21"
+    }
+  },
+  {
+    "eventId": "9b0d51c6-07b0-4373-b07c-c24c102b825f",
+    "streamId": "ACU_LEDGER",
+    "version": 18,
+    "eventType": "ACU_DEDUCTED",
+    "payload": {
+      "amount": 10
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:06:53.438Z",
+      "user": "ADMIN",
+      "auditHash": "9fa3bcc3214c91df0dde6cda30a384a6a1c210359499f20670edebda8199af92"
+    }
+  },
+  {
+    "eventId": "dc303ecb-d283-4164-bd3b-09e5cff2337b",
+    "streamId": "9b0d51c6-07b0-4373-b07c-c24c102b825f",
+    "version": 19,
+    "eventType": "AI_COMPLETED",
+    "payload": {
+      "requestType": "Vision/Docs",
+      "provider": "Gemini",
+      "result": "Gemini mock result for Vision/Docs: Analyze assets with vision and docs."
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:06:53.439Z",
+      "user": "ADMIN",
+      "auditHash": "d9a8770374563655216ef4d61f59a09d604ce4397a150f8908165df1e191d2f3"
+    }
+  },
+  {
+    "eventId": "61f9c7bb-297c-4b29-bb7a-98ec874ea4a2",
+    "streamId": "12adc24e-4946-4f95-890d-1fabc9da51b0",
+    "version": 20,
+    "eventType": "EVIDENCE_PACK_GENERATED",
+    "payload": {
+      "portfolioId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
+      "eventId": "b361e087-0596-4f59-83ed-d4c9c36452f0",
+      "versionHash": "311abbf4719b906f4a686092552d761bed29d3a475c6bb267e4488d7a50d2242",
+      "userId": "admin@veryx.com",
+      "timestamp": "2026-02-10T16:06:06.057Z",
+      "watermark": "WATERMARKED"
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:22:04.781Z",
+      "user": "ADMIN",
+      "auditHash": "a5d5ddfaf2303ed14e002c0d97796b0754bd9c7e9aa571af7e2d226671ec5eee"
+    }
+  },
+  {
+    "eventId": "942b0603-e137-4fc9-9b60-f85c1f498b9b",
+    "streamId": "86dbe13c-965a-411d-89d0-81246ec41f06",
+    "version": 21,
+    "eventType": "EVIDENCE_PACK_GENERATED",
+    "payload": {
+      "portfolioId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
+      "eventId": "b361e087-0596-4f59-83ed-d4c9c36452f0",
+      "versionHash": "311abbf4719b906f4a686092552d761bed29d3a475c6bb267e4488d7a50d2242",
+      "userId": "admin@veryx.com",
+      "timestamp": "2026-02-10T16:06:06.057Z",
+      "watermark": "WATERMARKED"
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:22:08.355Z",
+      "user": "ADMIN",
+      "auditHash": "b390ca3339989cd45720ee030c629f0be696e977459e8e76fa4edd4107745f5e"
+    }
+  },
+  {
+    "eventId": "e0bde635-8b9f-4d06-a207-a26df46149f2",
+    "streamId": "142ffca0-641a-4fda-928b-f3bc28d426b1",
+    "version": 22,
+    "eventType": "EVIDENCE_PACK_GENERATED",
+    "payload": {
+      "portfolioId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
+      "eventId": "b361e087-0596-4f59-83ed-d4c9c36452f0",
+      "versionHash": "311abbf4719b906f4a686092552d761bed29d3a475c6bb267e4488d7a50d2242",
+      "userId": "admin@veryx.com",
+      "timestamp": "2026-02-10T16:06:06.057Z",
+      "watermark": "WATERMARKED"
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:22:10.525Z",
+      "user": "ADMIN",
+      "auditHash": "9f4143f04fed4db85951478a0b34d7216d81055ad73874a5514eafc49d8dbed3"
+    }
+  },
+  {
+    "eventId": "bdb9bf51-2ba4-4782-88b1-b6edef288cb5",
+    "streamId": "69480fe3-fa92-4579-afbf-7bd71d6a8b14",
+    "version": 23,
+    "eventType": "EVIDENCE_PACK_GENERATED",
+    "payload": {
+      "portfolioId": "142954bb-cb1e-42a0-a5f9-d00339fb4069",
+      "eventId": "b361e087-0596-4f59-83ed-d4c9c36452f0",
+      "versionHash": "311abbf4719b906f4a686092552d761bed29d3a475c6bb267e4488d7a50d2242",
+      "userId": "admin@veryx.com",
+      "timestamp": "2026-02-10T16:06:06.057Z",
+      "watermark": "WATERMARKED"
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:22:10.850Z",
+      "user": "ADMIN",
+      "auditHash": "c8a37a4c75e70b739ea62402d1da3171c57cf251fa7e955a55ff83fbcc31a4e9"
+    }
+  },
+  {
+    "eventId": "6bb57ed7-66d8-4281-9db4-1664b55c65ed",
+    "streamId": "ACU_LEDGER",
+    "version": 24,
+    "eventType": "ACU_DEDUCTED",
+    "payload": {
+      "amount": 10
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:36:36.703Z",
+      "user": "ADMIN",
+      "auditHash": "c88fd3c29d383a38281d0b85e6464f2802352ae94803f4a4bc95292b39127a7d"
+    }
+  },
+  {
+    "eventId": "750cfb46-13c5-4113-be97-60191fb95abf",
+    "streamId": "6bb57ed7-66d8-4281-9db4-1664b55c65ed",
+    "version": 25,
+    "eventType": "AI_COMPLETED",
+    "payload": {
+      "requestType": "Reasoning/Forecasting",
+      "provider": "OpenAI",
+      "result": "OpenAI mock result for Reasoning/Forecasting: Run portfolio forecasting."
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:36:36.704Z",
+      "user": "ADMIN",
+      "auditHash": "8a07717b0b19650781fee9d269581afc0b4ba7e5fbcff300989129739c031a6b"
+    }
+  },
+  {
+    "eventId": "c17dcc6c-1f90-44f1-af8e-c1b6aa8ad074",
+    "streamId": "ACU_LEDGER",
+    "version": 26,
+    "eventType": "ACU_DEDUCTED",
+    "payload": {
+      "amount": 10
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:36:38.533Z",
+      "user": "ADMIN",
+      "auditHash": "052de0a808783f5e56d73c0adf96db1c592f3de87a4fa004624b333fdf90a7bf"
+    }
+  },
+  {
+    "eventId": "613007d0-68f6-40ee-bc13-3867aefe6d60",
+    "streamId": "c17dcc6c-1f90-44f1-af8e-c1b6aa8ad074",
+    "version": 27,
+    "eventType": "AI_COMPLETED",
+    "payload": {
+      "requestType": "Vision/Docs",
+      "provider": "Gemini",
+      "result": "Gemini mock result for Vision/Docs: Analyze assets with vision and docs."
+    },
+    "meta": {
+      "timestamp": "2026-02-10T17:36:38.534Z",
+      "user": "ADMIN",
+      "auditHash": "3b81e4de00497f16a75dfd3e689686950debd82742597d3c110bc626c4965469"
+    }
   }
 ]
