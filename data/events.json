@@ -92,5 +92,19 @@
       "user": "OPS",
       "auditHash": "cd35646c1ee52eef30946b74b58ad4c386d37fa1bca8fe047b6e57d542d2a94c"
     }
+  },
+  {
+    "eventId": "75f7ee9f-b7fb-46e3-894c-9da21a36b515",
+    "streamId": "b198a69f-493b-4ac9-8f07-244d0e1f449c",
+    "version": 2,
+    "eventType": "WORK_ORDER_ISSUED",
+    "payload": {
+      "summary": "Done on 2rd feb"
+    },
+    "meta": {
+      "timestamp": "2026-02-11T04:36:37.348Z",
+      "user": "OPS",
+      "auditHash": "4f0f7119026d72b28591f77fc81445efbde4fbb4dd9fab80d06fe033dc424991"
+    }
   }
 ]

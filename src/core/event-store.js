@@ -7,26 +7,50 @@ const crypto = require('crypto');
 // Saves events to a local JSON file to mimic an Append-Only Log
 
 const DB_PATH = path.join(__dirname, '../../data/events.json');
+const DB_DIR = path.dirname(DB_PATH);
 
 class EventStore {
     constructor() {
-        // Initialize DB file if it doesn't exist
-        if (!fs.existsSync(DB_PATH)) {
-            fs.writeFileSync(DB_PATH, JSON.stringify([]));
+        this.ensureStoreFile();
+    }
+
+    ensureStoreFile() {
+        fs.mkdirSync(DB_DIR, { recursive: true });
+        try {
+            fs.accessSync(DB_PATH, fs.constants.F_OK);
+        } catch (err) {
+            if (err && err.code === 'ENOENT') {
+                fs.writeFileSync(DB_PATH, '[]', 'utf8');
+                return;
+            }
+            throw err;
         }
+    }
+
+    readEvents() {
+        this.ensureStoreFile();
+        try {
+            const raw = fs.readFileSync(DB_PATH, 'utf8').trim();
+            if (!raw) return [];
+            const parsed = JSON.parse(raw);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch (err) {
+            if (err instanceof SyntaxError) return [];
+            throw err;
+        }
+    }
+
+    writeEvents(events) {
+        const payload = JSON.stringify(events, null, 2);
+        const tempPath = `${DB_PATH}.tmp`;
+        fs.writeFileSync(tempPath, payload, 'utf8');
+        fs.renameSync(tempPath, DB_PATH);
     }
 
     // 1. APPEND EVENT (Write Only)
     append(streamId, eventType, payload, user) {
-        // Read current history
-        let currentData = [];
-        try {
-            const raw = fs.readFileSync(DB_PATH);
-            currentData = JSON.parse(raw);
-        } catch (err) {
-            if (!(err instanceof SyntaxError)) throw err;
-            currentData = [];
-        }
+        const currentData = this.readEvents();
+        const streamVersion = currentData.filter((event) => event.streamId === streamId).length + 1;
 
         const timestamp = new Date().toISOString();
         const hashInput = JSON.stringify({ streamId, eventType, payload, timestamp });
@@ -35,9 +59,9 @@ class EventStore {
         const newEvent = {
             eventId: uuidv4(),
             streamId: streamId,
-            version: currentData.length + 1,
+            version: streamVersion,
             eventType: eventType,
-            payload: payload,
+            payload: payload || {},
             meta: {
                 timestamp: timestamp,
                 user: user || 'system',
@@ -45,23 +69,16 @@ class EventStore {
             }
         };
 
-        // Save to File (Immutable Log)
         currentData.push(newEvent);
-        fs.writeFileSync(DB_PATH, JSON.stringify(currentData, null, 2));
-        
+        this.writeEvents(currentData);
+
         console.log(`[EVENT STORE] Appended: ${eventType} | ID: ${streamId}`);
         return newEvent;
     }
 
     // 2. READ ALL (For Replay)
     getAllEvents() {
-        if (!fs.existsSync(DB_PATH)) return [];
-        try {
-            return JSON.parse(fs.readFileSync(DB_PATH));
-        } catch (err) {
-            if (err instanceof SyntaxError) return [];
-            throw err;
-        }
+        return this.readEvents();
     }
 }
 
