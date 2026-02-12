@@ -1,11 +1,24 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
 const eventStore = require('./src/core/event-store');
 const projectionEngine = require('./src/core/projection-engine');
 const { runAIRequest } = require('./src/core/ai-orchestrator');
+
+const MONGODB_URI = process.env.MONGODB_URI;
+const PORT = process.env.PORT || 5000;
+
+const connectToDatabase = async () => {
+    if (!MONGODB_URI) {
+        throw new Error('MONGODB_URI is not set.');
+    }
+
+    await mongoose.connect(MONGODB_URI);
+    console.log('[DATABASE] MongoDB Atlas connected');
+};
 
 const app = express();
 app.use(bodyParser.json({ limit: '1mb' }));
@@ -19,6 +32,10 @@ app.use(cors({
 
 app.options('*', cors());
 
+const asyncHandler = (handler) => (req, res, next) => {
+    Promise.resolve(handler(req, res, next)).catch(next);
+};
+
 const requireRole = (allowedRoles) => (req, res, next) => {
     const role = req.body && req.body.userRole;
     if (!role || !allowedRoles.includes(role)) {
@@ -31,76 +48,76 @@ app.get('/', (req, res) => {
     res.send('VERYX Enterprise OS - Core Active');
 });
 
-app.post('/api/command/create-portfolio', (req, res) => {
+app.post('/api/command/create-portfolio', asyncHandler(async (req, res) => {
     const { name, budget, score, user } = req.body;
     const streamId = uuidv4();
 
-    eventStore.append(streamId, 'PORTFOLIO_CREATED', {
+    await eventStore.append(streamId, 'PORTFOLIO_CREATED', {
         name,
         budget: Number(budget) || 0,
         score: Number(score) || 0
     }, user);
 
     res.json({ success: true, id: streamId });
-});
+}));
 
-app.post('/api/command/approve-portfolio', requireRole(['MANAGER', 'ADMIN']), (req, res) => {
+app.post('/api/command/approve-portfolio', requireRole(['MANAGER', 'ADMIN']), asyncHandler(async (req, res) => {
     const { portfolioId, user } = req.body;
-    eventStore.append(portfolioId, 'STAGE_GATE_APPROVED', { decision: 'PROCEED' }, user);
+    await eventStore.append(portfolioId, 'STAGE_GATE_APPROVED', { decision: 'PROCEED' }, user);
     res.json({ success: true, message: 'Portfolio Approved' });
-});
+}));
 
-app.post('/api/command/log-expense', (req, res) => {
+app.post('/api/command/log-expense', asyncHandler(async (req, res) => {
     const { portfolioId, amount, description, user } = req.body;
 
-    eventStore.append(portfolioId, 'EXPENSE_LOGGED', {
+    await eventStore.append(portfolioId, 'EXPENSE_LOGGED', {
         amount: Number(amount) || 0,
         description: description || ''
     }, user);
 
     res.json({ success: true, message: 'Expense Logged' });
-});
+}));
 
-app.post('/api/command/add-resource', (req, res) => {
+app.post('/api/command/add-resource', asyncHandler(async (req, res) => {
     const { name, skill, user } = req.body;
     const streamId = uuidv4();
 
-    eventStore.append(streamId, 'RESOURCE_ADDED', {
+    await eventStore.append(streamId, 'RESOURCE_ADDED', {
         name,
         skill
     }, user);
 
     res.json({ success: true, id: streamId });
-});
+}));
 
-app.post('/api/command/log-timesheet', (req, res) => {
+app.post('/api/command/log-timesheet', asyncHandler(async (req, res) => {
     const { resourceId, hours, user } = req.body;
-    eventStore.append(resourceId, 'TIMESHEET_LOGGED', { hours: Number(hours) || 0 }, user);
+    await eventStore.append(resourceId, 'TIMESHEET_LOGGED', { hours: Number(hours) || 0 }, user);
     res.json({ success: true });
-});
+}));
 
-app.post('/api/command/register-asset', (req, res) => {
+app.post('/api/command/register-asset', asyncHandler(async (req, res) => {
     const { name, kind, portfolioId, user } = req.body;
     const streamId = uuidv4();
 
-    eventStore.append(streamId, 'ASSET_REGISTERED', {
+    await eventStore.append(streamId, 'ASSET_REGISTERED', {
         name,
         kind,
         portfolioId
     }, user);
 
     res.json({ success: true, id: streamId });
-});
+}));
 
-app.post('/api/command/issue-work-order', (req, res) => {
+app.post('/api/command/issue-work-order', asyncHandler(async (req, res) => {
     const { assetId, summary, user } = req.body;
-    eventStore.append(assetId, 'WORK_ORDER_ISSUED', { summary }, user);
+    await eventStore.append(assetId, 'WORK_ORDER_ISSUED', { summary }, user);
     res.json({ success: true });
-});
+}));
 
-app.post('/api/command/generate-evidence', requireRole(['MANAGER', 'ADMIN']), (req, res) => {
+app.post('/api/command/generate-evidence', requireRole(['MANAGER', 'ADMIN']), asyncHandler(async (req, res) => {
     const { portfolioId, user } = req.body;
-    const allEvents = eventStore.getAllEvents();
+    const allEvents = await eventStore.getAllEvents();
     const state = projectionEngine.run(allEvents);
     const portfolio = state.portfolios.find((p) => p.id === portfolioId);
 
@@ -114,7 +131,7 @@ app.post('/api/command/generate-evidence', requireRole(['MANAGER', 'ADMIN']), (r
     }
 
     const packId = uuidv4();
-    const packEvent = eventStore.append(packId, 'EVIDENCE_PACK_GENERATED', {
+    const packEvent = await eventStore.append(packId, 'EVIDENCE_PACK_GENERATED', {
         portfolioId,
         eventId: sourceEvent.eventId,
         versionHash: sourceEvent.meta.auditHash,
@@ -124,11 +141,11 @@ app.post('/api/command/generate-evidence', requireRole(['MANAGER', 'ADMIN']), (r
     }, user);
 
     return res.json({ success: true, id: packEvent.eventId, hash: packEvent.meta.auditHash });
-});
+}));
 
-app.post('/api/command/request-ai', (req, res) => {
+app.post('/api/command/request-ai', asyncHandler(async (req, res) => {
     const { requestType, prompt, user } = req.body;
-    const allEvents = eventStore.getAllEvents();
+    const allEvents = await eventStore.getAllEvents();
     const state = projectionEngine.run(allEvents);
 
     if (state.acuBalance <= 0) {
@@ -138,27 +155,28 @@ app.post('/api/command/request-ai', (req, res) => {
         });
     }
 
-    const acuEvent = eventStore.append('ACU_LEDGER', 'ACU_DEDUCTED', { amount: 10 }, user);
-    const aiResult = runAIRequest({ requestType, prompt, user, requestId: acuEvent.eventId });
+    const acuEvent = await eventStore.append('ACU_LEDGER', 'ACU_DEDUCTED', { amount: 10 }, user);
+    const aiResult = await runAIRequest({ requestType, prompt, user, requestId: acuEvent.eventId });
 
     return res.json({ success: true, data: aiResult });
-});
+}));
 
-app.get('/api/query/state', (req, res) => {
-    const allEvents = eventStore.getAllEvents();
+app.get('/api/query/state', asyncHandler(async (req, res) => {
+    const allEvents = await eventStore.getAllEvents();
     const state = projectionEngine.run(allEvents);
     res.json(state);
-});
+}));
 
-app.get('/api/query/audit-log', (req, res) => {
-    res.json(eventStore.getAllEvents());
-});
+app.get('/api/query/audit-log', asyncHandler(async (req, res) => {
+    const allEvents = await eventStore.getAllEvents();
+    res.json(allEvents);
+}));
 
-app.post('/api/query/evidence/export', requireRole(['MANAGER', 'ADMIN']), (req, res) => {
+app.post('/api/query/evidence/export', requireRole(['MANAGER', 'ADMIN']), asyncHandler(async (req, res) => {
     const { hash, format } = req.body;
     const exportFormat = String(format || 'json').toLowerCase();
 
-    const allEvents = eventStore.getAllEvents();
+    const allEvents = await eventStore.getAllEvents();
     const evidenceEvent = allEvents.find((event) =>
         (event.eventType === 'EVIDENCE_PACK_GENERATED' || event.eventType === 'GENERATE_EVIDENCE') &&
         event.meta.auditHash === hash
@@ -228,22 +246,39 @@ app.post('/api/query/evidence/export', requireRole(['MANAGER', 'ADMIN']), (req, 
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Content-Disposition', `attachment; filename="evidence-${payload.id}.json"`);
     return res.json(payload);
-});
+}));
 
-app.get('/api/system/integrity', (req, res) => {
-    const allEvents = eventStore.getAllEvents();
+app.get('/api/system/integrity', asyncHandler(async (req, res) => {
+    const allEvents = await eventStore.getAllEvents();
     const integrity = projectionEngine.verifyChain(allEvents);
     res.json({ success: true, systemIntegrity: integrity });
-});
+}));
 
-app.post('/api/system/replay', (req, res) => {
-    const allEvents = eventStore.getAllEvents();
+app.post('/api/system/replay', asyncHandler(async (req, res) => {
+    const allEvents = await eventStore.getAllEvents();
     const state = projectionEngine.run(allEvents);
     res.json({ success: true, state, eventCount: allEvents.length });
+}));
+
+app.use((err, req, res, next) => {
+    console.error('[ERROR]', err);
+    if (res.headersSent) {
+        return next(err);
+    }
+    return res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`VERYX Server running on Port ${PORT}`);
-    console.log('[SYSTEM] Event Sourcing Mode: ACTIVE');
-});
+const startServer = async () => {
+    try {
+        await connectToDatabase();
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`VERYX Server running on Port ${PORT}`);
+            console.log('[SYSTEM] Event Sourcing Mode: ACTIVE');
+        });
+    } catch (error) {
+        console.error('[BOOT] Failed to start server:', error.message);
+        process.exit(1);
+    }
+};
+
+startServer();

@@ -16,12 +16,12 @@ const createMockResult = (provider, requestType, prompt) => {
     return `${provider} mock result for ${requestType || 'AI'}: ${safePrompt}`;
 };
 
-const runAIRequest = ({ requestType, prompt, user, requestId }) => {
+const runAIRequest = async ({ requestType, prompt, user, requestId }) => {
     const provider = selectProvider(requestType);
     const result = createMockResult(provider, requestType, prompt);
     const streamId = requestId || uuidv4();
 
-    eventStore.append(streamId, 'AI_COMPLETED', {
+    await eventStore.append(streamId, 'AI_COMPLETED', {
         requestType: requestType || 'AI',
         provider,
         result

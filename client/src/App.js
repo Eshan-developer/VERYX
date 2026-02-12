@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 
-const API_URL = process.env.REACT_APP_API_URL || (() => {
+const API_URL = (() => {
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
+  }
+
   if (typeof window === 'undefined') {
     return 'http://localhost:5000';
   }
 
-  const { host, protocol } = window.location;
+  const { host, protocol, origin } = window.location;
 
   if (host.includes('-3000')) {
     return `${protocol}//${host.replace('-3000', '-5000')}`;
@@ -20,7 +24,7 @@ const API_URL = process.env.REACT_APP_API_URL || (() => {
     return 'http://127.0.0.1:5000';
   }
 
-  return `${protocol}//${host}`;
+  return origin;
 })();
 
 const toNumber = (value, fallback = 0) => {
@@ -64,6 +68,10 @@ function App() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    document.title = 'VERYX ENTERPRISE OS';
+  }, []);
 
   const notify = useCallback((type, message) => {
     if (notificationTimeoutRef.current) {

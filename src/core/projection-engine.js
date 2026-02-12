@@ -1,5 +1,28 @@
 const crypto = require('crypto');
 
+const normalizeEvent = (eventDoc) => {
+    const raw = typeof eventDoc?.toObject === 'function' ? eventDoc.toObject() : (eventDoc || {});
+    const payload = raw.payload && typeof raw.payload === 'object' ? raw.payload : {};
+    const rawMeta = raw.meta && typeof raw.meta === 'object' ? raw.meta : {};
+    const parsedDate = new Date(rawMeta.timestamp || raw.createdAt || Date.now());
+    const safeTimestamp = Number.isNaN(parsedDate.getTime())
+        ? new Date(0).toISOString()
+        : parsedDate.toISOString();
+
+    return {
+        eventId: raw.eventId,
+        streamId: raw.streamId,
+        version: raw.version,
+        eventType: raw.eventType,
+        payload,
+        meta: {
+            timestamp: safeTimestamp,
+            user: rawMeta.user || 'system',
+            auditHash: rawMeta.auditHash || ''
+        }
+    };
+};
+
 class ProjectionEngine {
     constructor() {
         this.currentState = {
@@ -17,7 +40,8 @@ class ProjectionEngine {
 
     verifyChain(events) {
         let integrity = 'VERIFIED';
-        for (const event of events) {
+        for (const rawEvent of events) {
+            const event = normalizeEvent(rawEvent);
             const hashInput = JSON.stringify({
                 streamId: event.streamId,
                 eventType: event.eventType,
@@ -34,6 +58,7 @@ class ProjectionEngine {
     }
 
     run(events) {
+        const normalizedEvents = Array.isArray(events) ? events.map(normalizeEvent) : [];
         const portfoliosById = new Map();
         const workforceById = new Map();
         const assetsById = new Map();
@@ -44,7 +69,7 @@ class ProjectionEngine {
         this.currentState.esgSummary = { scope1: 0, scope2: 0, scope3: 0 };
         this.currentState.acuBalance = 100;
 
-        for (const event of events) {
+        for (const event of normalizedEvents) {
             // 0. ACU Ledger (Section 6)
             if (event.eventType === 'ACU_DEDUCTED') {
                 const nextBalance = this.currentState.acuBalance - 10;
@@ -196,7 +221,7 @@ class ProjectionEngine {
         this.currentState.portfolios = Array.from(portfoliosById.values());
         this.currentState.workforce = Array.from(workforceById.values());
         this.currentState.assets = Array.from(assetsById.values());
-        this.currentState.systemIntegrity = this.verifyChain(events);
+        this.currentState.systemIntegrity = this.verifyChain(normalizedEvents);
 
         return this.currentState;
     }

@@ -1,84 +1,78 @@
-const fs = require('fs');
-const path = require('path');
+const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 
-// PHASE 1: IMMUTABLE EVENT STORE
-// Saves events to a local JSON file to mimic an Append-Only Log
+const eventSchema = new mongoose.Schema(
+    {
+        eventId: { type: String, required: true, index: true },
+        streamId: { type: String, required: true, index: true },
+        eventType: { type: String, required: true, trim: true },
+        payload: { type: mongoose.Schema.Types.Mixed, default: {} },
+        version: { type: Number, required: true },
+        meta: {
+            auditHash: { type: String, required: true },
+            timestamp: { type: Date, required: true, index: true },
+            user: { type: String, default: 'system' }
+        }
+    },
+    {
+        collection: 'events',
+        versionKey: false
+    }
+);
 
-const DB_PATH = path.join(__dirname, '../../data/events.json');
-const DB_DIR = path.dirname(DB_PATH);
+eventSchema.index({ streamId: 1, version: 1 }, { unique: true });
+
+const EventModel = mongoose.models.Event || mongoose.model('Event', eventSchema);
+
+const normalizeEvent = (doc) => {
+    const raw = typeof doc?.toObject === 'function' ? doc.toObject() : doc;
+    return {
+        eventId: raw.eventId,
+        streamId: raw.streamId,
+        version: raw.version,
+        eventType: raw.eventType,
+        payload: raw.payload || {},
+        meta: {
+            timestamp: new Date(raw.meta?.timestamp).toISOString(),
+            user: raw.meta?.user || 'system',
+            auditHash: raw.meta?.auditHash
+        }
+    };
+};
 
 class EventStore {
-    constructor() {
-        this.ensureStoreFile();
-    }
-
-    ensureStoreFile() {
-        fs.mkdirSync(DB_DIR, { recursive: true });
-        try {
-            fs.accessSync(DB_PATH, fs.constants.F_OK);
-        } catch (err) {
-            if (err && err.code === 'ENOENT') {
-                fs.writeFileSync(DB_PATH, '[]', 'utf8');
-                return;
-            }
-            throw err;
-        }
-    }
-
-    readEvents() {
-        this.ensureStoreFile();
-        try {
-            const raw = fs.readFileSync(DB_PATH, 'utf8').trim();
-            if (!raw) return [];
-            const parsed = JSON.parse(raw);
-            return Array.isArray(parsed) ? parsed : [];
-        } catch (err) {
-            if (err instanceof SyntaxError) return [];
-            throw err;
-        }
-    }
-
-    writeEvents(events) {
-        const payload = JSON.stringify(events, null, 2);
-        const tempPath = `${DB_PATH}.tmp`;
-        fs.writeFileSync(tempPath, payload, 'utf8');
-        fs.renameSync(tempPath, DB_PATH);
-    }
-
     // 1. APPEND EVENT (Write Only)
-    append(streamId, eventType, payload, user) {
-        const currentData = this.readEvents();
-        const streamVersion = currentData.filter((event) => event.streamId === streamId).length + 1;
+    async append(streamId, eventType, payload, user) {
+        const safePayload = payload || {};
+        const streamVersion = (await EventModel.countDocuments({ streamId })) + 1;
 
-        const timestamp = new Date().toISOString();
-        const hashInput = JSON.stringify({ streamId, eventType, payload, timestamp });
+        const timestamp = new Date();
+        const isoTimestamp = timestamp.toISOString();
+        const hashInput = JSON.stringify({ streamId, eventType, payload: safePayload, timestamp: isoTimestamp });
         const auditHash = crypto.createHash('sha256').update(hashInput).digest('hex');
 
-        const newEvent = {
+        const newEvent = await EventModel.create({
             eventId: uuidv4(),
-            streamId: streamId,
+            streamId,
             version: streamVersion,
-            eventType: eventType,
-            payload: payload || {},
+            eventType,
+            payload: safePayload,
             meta: {
-                timestamp: timestamp,
+                timestamp,
                 user: user || 'system',
-                auditHash: auditHash
+                auditHash
             }
-        };
-
-        currentData.push(newEvent);
-        this.writeEvents(currentData);
+        });
 
         console.log(`[EVENT STORE] Appended: ${eventType} | ID: ${streamId}`);
-        return newEvent;
+        return normalizeEvent(newEvent);
     }
 
     // 2. READ ALL (For Replay)
-    getAllEvents() {
-        return this.readEvents();
+    async getAllEvents() {
+        const events = await EventModel.find().sort({ 'meta.timestamp': 1 });
+        return events.map(normalizeEvent);
     }
 }
 
