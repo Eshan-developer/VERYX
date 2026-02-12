@@ -25,6 +25,19 @@ eventSchema.index({ streamId: 1, version: 1 }, { unique: true });
 
 const EventModel = mongoose.models.Event || mongoose.model('Event', eventSchema);
 
+const ensureDatabaseConnection = async (mongoUri) => {
+    if (!mongoUri) {
+        throw new Error('MONGODB_URI is not set.');
+    }
+
+    if (mongoose.connection.readyState === 1) {
+        return;
+    }
+
+    await mongoose.connect(mongoUri, { connectTimeoutMS: 10000 });
+    console.log('[DATABASE] MongoDB Atlas connected');
+};
+
 const normalizeEvent = (doc) => {
     const raw = typeof doc?.toObject === 'function' ? doc.toObject() : doc;
     return {
@@ -42,6 +55,10 @@ const normalizeEvent = (doc) => {
 };
 
 class EventStore {
+    async connect(mongoUri) {
+        await ensureDatabaseConnection(mongoUri);
+    }
+
     // 1. APPEND EVENT (Write Only)
     async append(streamId, eventType, payload, user) {
         const safePayload = payload || {};

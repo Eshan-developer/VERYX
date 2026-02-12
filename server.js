@@ -1,7 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
 const eventStore = require('./src/core/event-store');
@@ -12,12 +12,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 5000;
 
 const connectToDatabase = async () => {
-    if (!MONGODB_URI) {
-        throw new Error('MONGODB_URI is not set.');
-    }
-
-    await mongoose.connect(MONGODB_URI);
-    console.log('[DATABASE] MongoDB Atlas connected');
+    await eventStore.connect(MONGODB_URI);
 };
 
 const app = express();
