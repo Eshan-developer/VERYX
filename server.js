@@ -23,14 +23,15 @@ const connectToDatabase = async () => {
 const app = express();
 app.use(bodyParser.json({ limit: '1mb' }));
 
-app.use(cors({
-    origin: '*',
+const corsOptions = {
+    origin: true,
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     credentials: true
-}));
+};
 
-app.options('*', cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 const asyncHandler = (handler) => (req, res, next) => {
     Promise.resolve(handler(req, res, next)).catch(next);

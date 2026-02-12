@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 
-const API_URL = 'https://veryx-backend.onrender.com';
+const API_URL = (process.env.REACT_APP_API_URL || 'https://veryx-backend.onrender.com').replace(/\/+$/, '');
 
 const toNumber = (value, fallback = 0) => {
   const parsed = Number(value);
